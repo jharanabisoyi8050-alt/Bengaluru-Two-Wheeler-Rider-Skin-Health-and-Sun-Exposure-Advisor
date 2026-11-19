@@ -6,162 +6,258 @@
 <title>Bengaluru Rider Skin Health &amp; Sun Exposure Advisor</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <style>
-  :root {
-    --bg:#0f1117; --surface:#1a1d2e; --surface2:#232640;
-    --border:#2d3056; --text:#e8eaf6; --muted:#8b90bb;
-    --safe:#00e676; --gear:#ffd600; --delay:#ff9100; --avoid:#ff1744;
-    --accent:#5c6bc0; --accent2:#7986cb; --info:#29b6f6;
-    --radius:12px; --shadow:0 4px 24px rgba(0,0,0,.4);
+  :root{
+    --bg:#0f1117;--surface:#1a1d2e;--surface2:#232640;
+    --border:#2d3056;--text:#e8eaf6;--muted:#8b90bb;
+    --safe:#00e676;--gear:#ffd600;--delay:#ff9100;--avoid:#ff1744;
+    --accent:#5c6bc0;--accent2:#7986cb;--info:#29b6f6;--warn:#ffa726;
+    --radius:12px;--shadow:0 4px 24px rgba(0,0,0,.4);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:-apple-system,"Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.6}
-  a{color:var(--accent2)}
-  h1,h2,h3{font-weight:700}
-  .container{max-width:1200px;margin:0 auto;padding:0 20px}
+  h1,h2,h3,h4{font-weight:700}
 
-  /* ── Header ── */
-  header{background:linear-gradient(135deg,#1a1d2e 0%,#232640 100%);border-bottom:1px solid var(--border);padding:18px 0;position:sticky;top:0;z-index:100}
-  .header-inner{display:flex;align-items:center;gap:16px}
+  /* Header */
+  header{background:linear-gradient(135deg,#1a1d2e 0%,#232640 100%);border-bottom:1px solid var(--border);padding:16px 0;position:sticky;top:0;z-index:100}
+  .header-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:16px}
   .logo{font-size:28px}
-  .header-title h1{font-size:1.3rem;background:linear-gradient(90deg,#7986cb,#29b6f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .header-title p{font-size:.82rem;color:var(--muted)}
-  .ibm-badge{margin-left:auto;background:#0530ad;color:#fff;padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:600;letter-spacing:.5px}
+  .header-title h1{font-size:1.25rem;background:linear-gradient(90deg,#7986cb,#29b6f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .header-title p{font-size:.8rem;color:var(--muted)}
+  .ibm-badge{margin-left:auto;background:#0530ad;color:#fff;padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:.5px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--safe);animation:pulse 2s infinite;display:inline-block;margin-right:6px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  /* ── Tabs ── */
-  .tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin:24px 0 20px;overflow-x:auto}
-  .tab-btn{background:none;border:none;color:var(--muted);padding:10px 20px;cursor:pointer;font-size:.9rem;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;white-space:nowrap}
+  /* Container */
+  .container{max-width:1200px;margin:0 auto;padding:0 20px 40px}
+
+  /* Tabs */
+  .tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin:20px 0 18px;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab-btn{background:none;border:none;color:var(--muted);padding:10px 20px;cursor:pointer;font-size:.88rem;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s;white-space:nowrap}
   .tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent2)}
   .tab-btn:hover{color:var(--text)}
   .tab-pane{display:none}.tab-pane.active{display:block}
 
-  /* ── Form Grid ── */
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:700px){.form-grid{grid-template-columns:1fr}}
-  .form-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
-  .form-section h3{font-size:.95rem;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px;font-weight:500}
+  /* Form */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:720px){.form-grid{grid-template-columns:1fr}}
+  .form-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+  .form-section h3{font-size:.92rem;color:var(--accent2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  label.field-label{display:block;font-size:.83rem;color:var(--muted);margin-bottom:5px;font-weight:500}
   select,input[type=number],input[type=text],input[type=time]{
     width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);
-    padding:9px 12px;border-radius:8px;font-size:.9rem;outline:none;transition:.2s;
+    padding:9px 12px;border-radius:8px;font-size:.88rem;outline:none;transition:.2s;
   }
   select:focus,input:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(121,134,203,.15)}
+
+  /* Custom route box */
+  .custom-route-box{display:none;background:rgba(121,134,203,.06);border:1px dashed var(--accent2);border-radius:var(--radius);padding:14px;margin-top:12px}
+  .custom-route-box.show{display:block}
+  .route-info-bar{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;padding:10px 12px;background:var(--surface2);border-radius:8px}
+  .route-stat{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:5px}
+  .route-stat strong{color:var(--text)}
+
+  /* Checkboxes */
   .checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .check-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);padding:9px 12px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:.2s}
+  @media(max-width:500px){.checkbox-grid{grid-template-columns:1fr}}
+  .check-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);padding:9px 12px;border-radius:8px;cursor:pointer;font-size:.84rem;transition:.2s}
   .check-item:hover{border-color:var(--accent2)}
-  .check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent2);cursor:pointer}
+  .check-item input{width:16px;height:16px;accent-color:var(--accent2);cursor:pointer;flex-shrink:0}
   .check-item.checked{border-color:var(--accent2);background:rgba(121,134,203,.1)}
 
-  /* ── Submit Button ── */
-  .btn-analyze{width:100%;padding:14px;background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#fff;font-size:1rem;font-weight:700;border-radius:var(--radius);cursor:pointer;transition:.2s;letter-spacing:.5px}
+  /* Reminder toggle */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border);margin-top:12px}
+  .toggle-label{font-size:.87rem;color:var(--text)}
+  .toggle-switch{position:relative;width:44px;height:24px;cursor:pointer}
+  .toggle-switch input{opacity:0;width:0;height:0}
+  .toggle-track{position:absolute;inset:0;background:var(--surface2);border:1px solid var(--border);border-radius:24px;transition:.3s}
+  .toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:.3s}
+  .toggle-switch input:checked~.toggle-track{background:var(--accent);border-color:var(--accent)}
+  .toggle-switch input:checked~.toggle-thumb{transform:translateX(20px);background:#fff}
+
+  /* Analyze button */
+  .btn-analyze{width:100%;padding:14px;background:linear-gradient(90deg,var(--accent),var(--accent2));border:none;color:#fff;font-size:1rem;font-weight:700;border-radius:var(--radius);cursor:pointer;transition:.2s;letter-spacing:.5px;margin-top:8px}
   .btn-analyze:hover{filter:brightness(1.1);transform:translateY(-1px)}
   .btn-analyze:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .discount-bar{margin-top:10px;padding:10px 14px;background:var(--surface2);border-radius:8px;font-size:.84rem;display:flex;align-items:center;justify-content:space-between}
 
-  /* ── Verdict Banner ── */
-  .verdict-banner{border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px;border:2px solid;animation:fadeIn .4s ease}
+  /* ════ REMINDER MODAL ════ */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;display:none}
+  .modal-overlay.open{display:flex}
+  .modal-box{background:var(--surface);border:2px solid var(--accent2);border-radius:16px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease}
+  @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  .modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .modal-header h2{font-size:1.05rem;color:var(--accent2)}
+  .modal-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1}
+  .modal-close:hover{color:var(--text)}
+  .modal-body{padding:20px 24px}
+  .reminder-msg{background:linear-gradient(135deg,rgba(92,107,192,.12),rgba(41,182,246,.08));border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;font-size:.88rem;line-height:1.7;margin-bottom:16px;color:var(--text)}
+  .gear-checklist{list-style:none}
+  .gear-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+  .gear-item:last-child{border-bottom:none}
+  .gear-emoji{font-size:1.4rem;flex-shrink:0;width:30px;text-align:center}
+  .gear-info{flex:1}
+  .gear-name{font-weight:700;font-size:.9rem}
+  .gear-reason{font-size:.8rem;color:var(--muted);margin-top:2px}
+  .priority-badge{padding:2px 9px;border-radius:12px;font-size:.72rem;font-weight:700;white-space:nowrap}
+  .priority-critical{background:rgba(255,23,68,.15);color:var(--avoid)}
+  .priority-high{background:rgba(255,145,0,.15);color:var(--delay)}
+  .priority-recommended{background:rgba(0,230,118,.12);color:var(--safe)}
+  .modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+  .btn-modal-ok{background:var(--safe);border:none;color:#000;padding:10px 24px;border-radius:8px;font-weight:700;cursor:pointer;font-size:.9rem}
+  .btn-modal-dismiss{background:var(--surface2);border:1px solid var(--border);color:var(--muted);padding:10px 20px;border-radius:8px;cursor:pointer;font-size:.9rem}
+
+  /* Verdict Banner */
+  .verdict-banner{border-radius:var(--radius);padding:18px 22px;margin-bottom:18px;display:flex;align-items:flex-start;gap:16px;border:2px solid;animation:fadeIn .4s ease}
   @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
   .verdict-banner.SAFE_TO_TRAVEL    {background:rgba(0,230,118,.08);border-color:var(--safe);color:var(--safe)}
   .verdict-banner.TRAVEL_WITH_GEAR  {background:rgba(255,214,0,.08);border-color:var(--gear);color:var(--gear)}
   .verdict-banner.DELAY_RECOMMENDED {background:rgba(255,145,0,.08);border-color:var(--delay);color:var(--delay)}
   .verdict-banner.AVOID_NON_ESSENTIAL{background:rgba(255,23,68,.08);border-color:var(--avoid);color:var(--avoid)}
-  .verdict-icon{font-size:2.5rem}
-  .verdict-title{font-size:1.4rem;font-weight:800;letter-spacing:1px}
-  .verdict-score{font-size:.9rem;opacity:.8;margin-top:2px}
-  .verdict-explanation{color:var(--text);font-size:.9rem;margin-top:10px;padding-top:10px;border-top:1px solid currentColor;opacity:.7}
+  .verdict-icon{font-size:2.4rem;flex-shrink:0}
+  .verdict-title{font-size:1.35rem;font-weight:800;letter-spacing:.8px}
+  .verdict-score{font-size:.88rem;opacity:.8;margin-top:2px}
+  .verdict-explanation{color:var(--text);font-size:.87rem;margin-top:8px;padding-top:8px;border-top:1px solid currentColor;opacity:.75;line-height:1.65}
 
-  /* ── Windows Badges ── */
-  .windows-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-  .window-badge{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;min-width:160px;position:relative}
-  .window-badge .wtime{font-size:1.05rem;font-weight:700;color:var(--accent2)}
-  .window-badge .wstats{font-size:.82rem;color:var(--muted);margin-top:4px}
-  .window-badge .wreduct{position:absolute;top:10px;right:10px;background:rgba(0,230,118,.15);color:var(--safe);font-size:.75rem;padding:2px 8px;border-radius:20px;font-weight:700}
+  /* Telemetry grid */
+  .tele-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:18px}
+  .tcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+  .tcard .tval{font-size:1.5rem;font-weight:800;color:var(--accent2)}
+  .tcard .tlabel{font-size:.74rem;color:var(--muted);margin-top:2px;line-height:1.3}
+  .tcard .tsub{font-size:.7rem;color:var(--muted);opacity:.7;margin-top:1px}
 
-  /* ── Telemetry Row ── */
-  .telemetry-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px}
-  .tcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
-  .tcard .tval{font-size:1.6rem;font-weight:800;color:var(--accent2)}
-  .tcard .tlabel{font-size:.78rem;color:var(--muted);margin-top:2px}
+  /* Route Info Bar */
+  .route-banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+  .route-banner-title{font-weight:700;color:var(--accent2);font-size:.95rem;flex-basis:100%}
+  .route-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.8rem;color:var(--text);display:flex;align-items:center;gap:5px}
+  .route-pill .rp-label{color:var(--muted);font-size:.75rem}
 
-  /* ── Agent Cards ── */
-  .agent-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-  @media(max-width:700px){.agent-cards{grid-template-columns:1fr}}
-  .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;position:relative}
-  .agent-card h4{font-size:.9rem;color:var(--accent2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
-  .agent-card .agent-body{font-size:.87rem;color:var(--muted);white-space:pre-wrap;line-height:1.7}
-  .agent-card .provider-tag{position:absolute;top:12px;right:14px;font-size:.72rem;background:rgba(92,107,192,.2);color:var(--accent2);padding:2px 8px;border-radius:12px}
-  .gap-list{list-style:none;padding:0}
-  .gap-list li{font-size:.85rem;padding:5px 0;border-bottom:1px solid var(--border);color:var(--delay);display:flex;gap:8px}
+  /* Best Windows */
+  .windows-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .window-badge{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;min-width:160px;position:relative;flex:1}
+  .window-badge .wtime{font-size:1rem;font-weight:700;color:var(--accent2)}
+  .window-badge .wstats{font-size:.78rem;color:var(--muted);margin-top:5px;line-height:1.6}
+  .window-badge .wreduct{position:absolute;top:10px;right:10px;background:rgba(0,230,118,.15);color:var(--safe);font-size:.72rem;padding:2px 8px;border-radius:20px;font-weight:700}
+  .window-badge .peak-tag{font-size:.7rem;background:rgba(255,145,0,.15);color:var(--delay);border-radius:4px;padding:1px 6px;display:inline-block;margin-top:3px}
+
+  /* Agent Cards */
+  .agent-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+  @media(max-width:720px){.agent-cards{grid-template-columns:1fr}}
+  .agent-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .agent-card h4{font-size:.88rem;color:var(--accent2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .agent-card .agent-body{font-size:.84rem;color:var(--muted);white-space:pre-wrap;line-height:1.7}
+  .agent-card .provider-tag{float:right;font-size:.7rem;background:rgba(92,107,192,.2);color:var(--accent2);padding:2px 8px;border-radius:12px;margin-left:8px}
+  .gap-list{list-style:none}
+  .gap-list li{font-size:.83rem;padding:5px 0;border-bottom:1px solid var(--border);color:var(--delay);display:flex;gap:8px}
   .gap-list li:last-child{border-bottom:none}
 
-  /* ── Chart ── */
-  .chart-wrapper{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
-  .chart-wrapper h3{font-size:.95rem;color:var(--accent2);margin-bottom:16px}
-  canvas{max-height:280px}
+  /* Charts */
+  .chart-wrapper{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:18px}
+  .chart-wrapper h3{font-size:.9rem;color:var(--accent2);margin-bottom:14px}
+  canvas{max-height:260px}
 
-  /* ── Analytics ── */
-  .analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
-  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center}
-  .stat-card .sval{font-size:2rem;font-weight:800;color:var(--accent2)}
-  .stat-card .slabel{font-size:.8rem;color:var(--muted);margin-top:4px}
+  /* Analytics */
+  .analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+  .stat-card .sval{font-size:1.9rem;font-weight:800;color:var(--accent2)}
+  .stat-card .slabel{font-size:.78rem;color:var(--muted);margin-top:4px}
 
-  /* ── Chat Console ── */
+  /* Chat Console */
   .chat-console{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;height:520px}
-  .chat-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-  .chat-header select{flex:1;max-width:280px}
-  .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-  .msg{max-width:80%;padding:10px 14px;border-radius:12px;font-size:.87rem;line-height:1.6}
+  .chat-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .chat-header select{flex:1;max-width:260px}
+  .chat-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:82%;padding:10px 14px;border-radius:12px;font-size:.85rem;line-height:1.65}
   .msg.user{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:4px}
   .msg.bot{align-self:flex-start;background:var(--surface2);color:var(--text);border-bottom-left-radius:4px}
-  .msg .msg-meta{font-size:.72rem;opacity:.6;margin-top:4px}
-  .chat-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:10px}
-  .chat-input-row input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:.9rem;outline:none}
+  .msg .msg-meta{font-size:.7rem;opacity:.6;margin-top:4px}
+  .chat-input-row{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
+  .chat-input-row input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:.88rem;outline:none}
   .chat-input-row input:focus{border-color:var(--accent2)}
-  .btn-send{background:var(--accent);border:none;color:#fff;padding:9px 18px;border-radius:8px;cursor:pointer;font-weight:600;transition:.2s}
+  .btn-send{background:var(--accent);border:none;color:#fff;padding:9px 18px;border-radius:8px;cursor:pointer;font-weight:700;transition:.2s;font-size:.88rem}
   .btn-send:hover{filter:brightness(1.15)}
   .btn-send:disabled{opacity:.5;cursor:not-allowed}
 
-  /* ── Loader ── */
-  .loader-overlay{position:fixed;inset:0;background:rgba(15,17,23,.8);display:flex;align-items:center;justify-content:center;z-index:999;display:none}
-  .loader-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px 40px;text-align:center}
-  .spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+  /* Loader */
+  .loader-overlay{position:fixed;inset:0;background:rgba(15,17,23,.85);display:none;align-items:center;justify-content:center;z-index:999}
+  .loader-overlay.show{display:flex}
+  .loader-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center;min-width:280px}
+  .spinner{width:46px;height:46px;border:4px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .loader-text{color:var(--muted);font-size:.9rem}
-  .agent-step{font-size:.8rem;color:var(--accent2);margin-top:6px}
+  .loader-steps{margin-top:10px}
+  .step-line{font-size:.8rem;padding:3px 0;transition:.3s}
+  .step-line.done{color:var(--safe)}
+  .step-line.active{color:var(--accent2);font-weight:700}
+  .step-line.pending{color:var(--muted);opacity:.5}
 
-  /* ── Misc ── */
-  .section-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .hitl-banner{background:rgba(255,145,0,.12);border:1px solid var(--delay);color:var(--delay);border-radius:var(--radius);padding:10px 16px;font-size:.88rem;margin-bottom:16px;display:none}
-  .cost-info{font-size:.78rem;color:var(--muted);text-align:right;margin-top:8px}
-  footer{text-align:center;padding:24px;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:30px}
-  .source-badge{display:inline-block;font-size:.72rem;padding:2px 8px;border-radius:12px;background:rgba(41,182,246,.15);color:var(--info);margin-left:8px}
+  /* Misc */
+  .section-title{font-size:.98rem;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .hitl-banner{background:rgba(255,145,0,.12);border:1px solid var(--delay);color:var(--delay);border-radius:var(--radius);padding:10px 16px;font-size:.86rem;margin-bottom:14px}
+  .cost-info{font-size:.76rem;color:var(--muted);text-align:right;margin-top:6px}
+  .source-badge{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:12px;background:rgba(41,182,246,.15);color:var(--info);margin-left:6px}
+  .aqi-pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.74rem;font-weight:700;margin-left:6px}
+  .aqi-Good{background:rgba(0,230,118,.15);color:var(--safe)}
+  .aqi-Moderate{background:rgba(255,214,0,.15);color:var(--gear)}
+  .aqi-Unhealthy{background:rgba(255,23,68,.15);color:var(--avoid)}
+  .aqi-Unhealthy_for_Sensitive{background:rgba(255,145,0,.15);color:var(--delay)}
+  .aqi-Hazardous{background:rgba(255,23,68,.3);color:var(--avoid)}
+  footer{text-align:center;padding:22px;color:var(--muted);font-size:.78rem;border-top:1px solid var(--border);margin-top:30px}
+
+  /* Smooth scroll */
+  html{scroll-behavior:smooth}
 </style>
 </head>
 <body>
 
-<!-- Loader -->
+<!-- ══════════ LOADER ══════════ -->
 <div class="loader-overlay" id="loaderOverlay">
   <div class="loader-box">
     <div class="spinner"></div>
-    <div class="loader-text">Running Multi-Agent Analysis…</div>
-    <div class="agent-step" id="agentStep">🔵 Agent 1: Fetching UV & Air Quality telemetry…</div>
+    <div style="font-size:.9rem;color:var(--muted);margin-bottom:12px">Running Multi-Agent Analysis…</div>
+    <div class="loader-steps" id="loaderSteps">
+      <div class="step-line pending" id="step0">🔵 Agent 1: Fetching UV & Air Quality data</div>
+      <div class="step-line pending" id="step1">🟡 Agent 2: Calculating exposure risk score</div>
+      <div class="step-line pending" id="step2">🟠 Agent 3: Scanning optimal departure windows</div>
+      <div class="step-line pending" id="step3">🟣 Agent 4: Generating skincare protocol</div>
+      <div class="step-line pending" id="step4">🔴 Agent 5: Auditing protection gear gaps</div>
+      <div class="step-line pending" id="step5">🟢 Agent 7: Preparing pre-ride reminder</div>
+    </div>
   </div>
 </div>
 
-<header>
-  <div class="container">
-    <div class="header-inner">
-      <div class="logo">🏍️</div>
-      <div class="header-title">
-        <h1>Bengaluru Rider Skin Health &amp; Sun Exposure Advisor</h1>
-        <p>Multi-Agent AI · IBM Granite on watsonx.ai · Real-time UV + PM2.5 Analysis</p>
-      </div>
-      <span class="ibm-badge">IBM Bob Hackathon</span>
+<!-- ══════════ PRE-RIDE REMINDER MODAL ══════════ -->
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>🪖 Pre-Ride Safety Gear Reminder</h2>
+      <button class="modal-close" onclick="closeReminder()">✕</button>
     </div>
+    <div class="modal-body">
+      <div class="reminder-msg" id="reminderMsg">Loading...</div>
+      <ul class="gear-checklist" id="gearChecklist"></ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-dismiss" onclick="closeReminder()">Dismiss</button>
+      <button class="btn-modal-ok" onclick="closeReminder()">✅ I'm Geared Up!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="header-inner">
+    <div class="logo">🏍️</div>
+    <div class="header-title">
+      <h1>Bengaluru Rider Skin Health &amp; Sun Exposure Advisor</h1>
+      <p><span class="live-dot"></span>Live UV + PM2.5 · IBM Granite on watsonx.ai · 7 Specialist AI Agents</p>
+    </div>
+    <span class="ibm-badge">IBM Bob Hackathon</span>
   </div>
 </header>
 
-<div class="container" style="padding-top:8px;padding-bottom:40px">
+<div class="container">
 
-  <!-- Tabs -->
+  <!-- TABS -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="advisor">🛡️ Get Advisory</button>
     <button class="tab-btn" data-tab="results">📊 Analysis Results</button>
@@ -169,39 +265,60 @@
     <button class="tab-btn" data-tab="analytics">📈 Dashboard</button>
   </div>
 
-  <!-- ═══ TAB 1: Advisor Form ═══ -->
+  <!-- ═══════════════════════════════════════════
+       TAB 1: ADVISOR FORM
+  ═══════════════════════════════════════════ -->
   <div class="tab-pane active" id="tab-advisor">
-    <form id="advisoryForm" onsubmit="return false">
+    <form onsubmit="return false">
 
       <!-- Route & Trip -->
       <div class="form-section">
         <h3>🗺️ Route &amp; Trip Details</h3>
         <div class="form-grid">
           <div>
-            <label>Bengaluru Commute Corridor</label>
-            <select id="route">
-              <option value="Electronic City – Indiranagar">Electronic City – Indiranagar</option>
-              <option value="Whitefield – Koramangala ORR">Whitefield – Koramangala ORR</option>
-              <option value="Hebbal – MG Road">Hebbal – MG Road</option>
-              <option value="BTM Layout – Marathahalli">BTM Layout – Marathahalli</option>
-              <option value="JP Nagar – Bellandur">JP Nagar – Bellandur</option>
-              <option value="KR Puram – Silk Board">KR Puram – Silk Board</option>
-              <option value="Yeshwanthpur – HSR Layout">Yeshwanthpur – HSR Layout</option>
-              <option value="Banaswadi – ITPL Whitefield">Banaswadi – ITPL Whitefield</option>
+            <label class="field-label">Select Bengaluru Corridor</label>
+            <select id="routeSelect" onchange="onRouteChange()">
+              <option value="Electronic City – Indiranagar">Electronic City – Indiranagar (22.5 km)</option>
+              <option value="Whitefield – Koramangala ORR">Whitefield – Koramangala ORR (28 km)</option>
+              <option value="Hebbal – MG Road">Hebbal – MG Road (14 km)</option>
+              <option value="BTM Layout – Marathahalli">BTM Layout – Marathahalli (18.5 km)</option>
+              <option value="JP Nagar – Bellandur">JP Nagar – Bellandur (12 km)</option>
+              <option value="KR Puram – Silk Board">KR Puram – Silk Board (20 km)</option>
+              <option value="Yeshwanthpur – HSR Layout">Yeshwanthpur – HSR Layout (25 km)</option>
+              <option value="Banaswadi – ITPL Whitefield">Banaswadi – ITPL Whitefield (22 km)</option>
+              <option value="__custom__">📍 Custom Route (Enter below)</option>
             </select>
           </div>
           <div>
-            <label>Estimated Duration (hours)</label>
-            <input type="number" id="duration" min="0.25" max="4" step="0.25" value="1.0"/>
+            <label class="field-label">Estimated Duration (hours)</label>
+            <input type="number" id="duration" min="0.25" max="4" step="0.25" value="1.25"/>
           </div>
           <div>
-            <label>Planned Departure Time</label>
+            <label class="field-label">Departure Time</label>
             <input type="time" id="departure" value="09:00"/>
           </div>
           <div>
-            <label>Your Name (optional)</label>
+            <label class="field-label">Your Name (optional)</label>
             <input type="text" id="riderName" placeholder="e.g. Arjun"/>
           </div>
+        </div>
+
+        <!-- Route info display -->
+        <div id="routeInfoBar" class="route-info-bar" style="margin-top:12px;display:none"></div>
+
+        <!-- Custom route input -->
+        <div class="custom-route-box" id="customRouteBox">
+          <div class="form-grid">
+            <div>
+              <label class="field-label">📍 Starting Point</label>
+              <input type="text" id="customStart" placeholder="e.g. Jayanagar 4th Block"/>
+            </div>
+            <div>
+              <label class="field-label">🏁 Destination</label>
+              <input type="text" id="customEnd" placeholder="e.g. Manyata Tech Park"/>
+            </div>
+          </div>
+          <p style="font-size:.78rem;color:var(--muted);margin-top:8px">Custom routes use Bengaluru default traffic parameters. Distance/speed will be estimated.</p>
         </div>
       </div>
 
@@ -210,7 +327,7 @@
         <h3>🧴 Skin Profile</h3>
         <div class="form-grid">
           <div>
-            <label>Skin Type</label>
+            <label class="field-label">Skin Type</label>
             <select id="skinType">
               <option value="oily">Oily</option>
               <option value="dry">Dry</option>
@@ -220,12 +337,12 @@
             </select>
           </div>
           <div>
-            <label>Skin Sensitivity Level</label>
+            <label class="field-label">Skin Sensitivity Level</label>
             <select id="skinSensitivity">
-              <option value="low">Low (×0.85 — tans easily)</option>
-              <option value="moderate" selected>Moderate (×1.00)</option>
-              <option value="high">High (×1.30 — burns frequently)</option>
-              <option value="hyper_reactive">Hyper-reactive (×1.60 — sun allergy)</option>
+              <option value="low">Low — ×0.85 (tans easily, rarely burns)</option>
+              <option value="moderate" selected>Moderate — ×1.00 (sometimes burns)</option>
+              <option value="high">High — ×1.30 (burns frequently)</option>
+              <option value="hyper_reactive">Hyper-reactive — ×1.60 (sun allergy)</option>
             </select>
           </div>
         </div>
@@ -236,115 +353,136 @@
         <h3>🛡️ Existing Sun &amp; Dust Protection Habits</h3>
 
         <div style="margin-bottom:14px">
-          <label>Sunscreen SPF Rating</label>
-          <select id="spfRating">
+          <label class="field-label">Sunscreen SPF Rating</label>
+          <select id="spfRating" onchange="calcDiscount()">
             <option value="none">None / No sunscreen</option>
-            <option value="SPF30">SPF 30 (−15% discount)</option>
-            <option value="SPF50+">SPF 50+ (−25% discount)</option>
+            <option value="SPF30">SPF 30 (−15% risk reduction)</option>
+            <option value="SPF50+">SPF 50+ (−25% risk reduction)</option>
           </select>
         </div>
 
-        <div class="checkbox-grid" id="habitsGrid">
-          <label class="check-item" id="ci_uses_sunscreen">
-            <input type="checkbox" id="uses_sunscreen" onchange="syncSpf()"/>
+        <div class="checkbox-grid">
+          <label class="check-item" id="ci_sunscreen">
+            <input type="checkbox" id="uses_sunscreen" onchange="calcDiscount();syncSpf()"/>
             🧴 Uses sunscreen
           </label>
           <label class="check-item" id="ci_reapplies">
-            <input type="checkbox" id="reapplies_sunscreen"/>
+            <input type="checkbox" id="reapplies_sunscreen" onchange="calcDiscount()"/>
             🔁 Reapplies every 2–3h (−5%)
           </label>
-          <label class="check-item" id="ci_arm_sleeves">
-            <input type="checkbox" id="wears_arm_sleeves"/>
+          <label class="check-item" id="ci_sleeves">
+            <input type="checkbox" id="wears_arm_sleeves" onchange="calcDiscount()"/>
             👕 UPF arm sleeves (−15%)
           </label>
-          <label class="check-item" id="ci_full_jacket">
-            <input type="checkbox" id="wears_full_jacket"/>
+          <label class="check-item" id="ci_jacket">
+            <input type="checkbox" id="wears_full_jacket" onchange="calcDiscount()"/>
             🧥 Full riding jacket (−15%)
           </label>
           <label class="check-item" id="ci_visor">
-            <input type="checkbox" id="visor_uv_tinted" onchange="syncVisor()"/>
-            🪖 UV-tinted visor (−15%)
+            <input type="checkbox" id="visor_uv_tinted" onchange="calcDiscount()"/>
+            😎 UV-tinted visor (−15%)
           </label>
           <label class="check-item" id="ci_gloves">
-            <input type="checkbox" id="wears_gloves"/>
+            <input type="checkbox" id="wears_gloves" onchange="calcDiscount()"/>
             🧤 Riding gloves (−5%)
           </label>
           <label class="check-item" id="ci_mask">
-            <input type="checkbox" id="uses_face_mask_gaiter"/>
-            😷 Cotton face mask/neck gaiter (−5%)
+            <input type="checkbox" id="uses_face_mask_gaiter" onchange="calcDiscount()"/>
+            😷 Face mask / neck gaiter (−5%)
           </label>
         </div>
 
-        <div id="discountDisplay" style="margin-top:12px;font-size:.85rem;color:var(--muted)">
-          Current protection discount: <strong id="discountVal" style="color:var(--safe)">0%</strong>
-          <span style="color:var(--muted)">(max 65%)</span>
+        <div class="discount-bar">
+          <span style="color:var(--muted)">Protection discount:</span>
+          <strong id="discountVal" style="color:var(--safe)">5%</strong>
+          <span style="color:var(--muted);font-size:.8rem">(max 65%)</span>
+        </div>
+
+        <!-- Reminder toggle -->
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">🔔 Show Pre-Ride Gear Reminder</div>
+            <div style="font-size:.78rem;color:var(--muted)">Get a checklist before every ride</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="reminderEnabled" checked/>
+            <span class="toggle-track"></span>
+            <span class="toggle-thumb"></span>
+          </label>
         </div>
       </div>
 
       <button type="button" class="btn-analyze" id="analyzeBtn" onclick="runAdvisory()">
-        🔍 Analyze My Ride — Get AI Advisory
+        🔍 Analyze My Ride — Get 7-Agent AI Advisory
       </button>
     </form>
   </div>
 
-  <!-- ═══ TAB 2: Results ═══ -->
+  <!-- ═══════════════════════════════════════════
+       TAB 2: RESULTS
+  ═══════════════════════════════════════════ -->
   <div class="tab-pane" id="tab-results">
     <div id="resultsArea">
-      <p style="color:var(--muted);text-align:center;padding:40px">Run an analysis on the "Get Advisory" tab first.</p>
+      <p style="color:var(--muted);text-align:center;padding:50px 20px">
+        Run an analysis on the "Get Advisory" tab first.
+      </p>
     </div>
   </div>
 
-  <!-- ═══ TAB 3: AI Agent Console ═══ -->
+  <!-- ═══════════════════════════════════════════
+       TAB 3: AI AGENT CONSOLE
+  ═══════════════════════════════════════════ -->
   <div class="tab-pane" id="tab-chat">
     <div class="chat-console">
       <div class="chat-header">
         <span style="font-size:1.1rem">💬</span>
         <div>
-          <div style="font-weight:700">AI Agent Console</div>
-          <div style="font-size:.78rem;color:var(--muted)">Chat live with any specialist agent</div>
+          <div style="font-weight:700;font-size:.92rem">AI Agent Console</div>
+          <div style="font-size:.76rem;color:var(--muted)">Chat live with any specialist agent · IBM Granite + Groq</div>
         </div>
         <select id="agentSelector" style="max-width:270px">
           <option value="risk_verdict">☢️ Risk &amp; Verdict Agent</option>
           <option value="timing">⏰ Timing Advisory Agent</option>
           <option value="skincare">🧴 Skin Care Agent</option>
-          <option value="protection">🛡️ Protective Measures Agent</option>
+          <option value="protection">🛡️ Protective Gear Agent</option>
+          <option value="reminder">🔔 Pre-Ride Reminder Agent</option>
           <option value="uv_monitor">🌡️ UV Monitor Agent</option>
           <option value="analytics">📊 Analytics Agent</option>
         </select>
       </div>
       <div class="chat-messages" id="chatMessages">
         <div class="msg bot">
-          👋 Hello! I'm your Bengaluru Rider Skin Health Advisor. Run an advisory analysis first, then ask me anything about UV exposure, skincare, gear, or timing. Which agent would you like to speak with?
-          <div class="msg-meta">AI Agent Console · IBM Granite</div>
+          Hello! I'm your Bengaluru Rider Skin Health Advisor powered by IBM Granite on watsonx.ai.
+          Run your advisory analysis first, then ask me anything — UV risks, skincare steps, gear choices, or the best time to ride today.
+          <div class="msg-meta">AI Agent Console</div>
         </div>
       </div>
       <div class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="Ask about UV risks, skincare, gear…" onkeydown="if(event.key==='Enter')sendChat()"/>
-        <button class="btn-send" id="sendBtn" onclick="sendChat()">Send ➤</button>
+        <input type="text" id="chatInput" placeholder="e.g. Is it safe to ride at 7pm today?" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
       </div>
     </div>
   </div>
 
-  <!-- ═══ TAB 4: Analytics Dashboard ═══ -->
+  <!-- ═══════════════════════════════════════════
+       TAB 4: ANALYTICS DASHBOARD
+  ═══════════════════════════════════════════ -->
   <div class="tab-pane" id="tab-analytics">
-    <div class="section-title">📈 Weekly Exposure Analytics Dashboard</div>
-
-    <div class="analytics-grid" id="analyticsCards">
+    <div class="section-title">📈 Weekly Exposure Analytics</div>
+    <div class="analytics-grid">
       <div class="stat-card"><div class="sval" id="an-trips">—</div><div class="slabel">Total Trips (7d)</div></div>
       <div class="stat-card"><div class="sval" id="an-safe">—</div><div class="slabel">✅ Safe to Travel</div></div>
       <div class="stat-card"><div class="sval" id="an-gear">—</div><div class="slabel">⚠️ Travel with Gear</div></div>
       <div class="stat-card"><div class="sval" id="an-delay">—</div><div class="slabel">🕐 Delay Recommended</div></div>
       <div class="stat-card"><div class="sval" id="an-avoid">—</div><div class="slabel">🚫 Avoid Travel</div></div>
-      <div class="stat-card"><div class="sval" id="an-tokens">—</div><div class="slabel">Total AI Tokens</div></div>
-      <div class="stat-card"><div class="sval" id="an-cost">—</div><div class="slabel">Total LLM Cost (USD)</div></div>
+      <div class="stat-card"><div class="sval" id="an-tokens">—</div><div class="slabel">AI Tokens Used</div></div>
+      <div class="stat-card"><div class="sval" id="an-cost">—</div><div class="slabel">LLM Cost (USD)</div></div>
     </div>
-
     <div class="chart-wrapper">
-      <h3>🗓️ Daily Risk Score Trend (7 Days)</h3>
+      <h3>📅 Daily Avg Risk Score (7 Days)</h3>
       <canvas id="analyticsChart"></canvas>
     </div>
-
-    <button class="btn-analyze" onclick="loadAnalytics()" style="max-width:260px;margin:0 auto;display:block">
+    <button class="btn-analyze" onclick="loadAnalytics()" style="max-width:240px;margin:0 auto;display:block">
       🔄 Refresh Analytics
     </button>
   </div>
@@ -352,22 +490,67 @@
 </div><!-- /container -->
 
 <footer>
-  Built for <strong>IBM Bob Hackathon — Problem Statement 12</strong> · Bengaluru Two-Wheeler Rider Skin Health Advisor<br/>
-  Powered by IBM Granite (watsonx.ai) · Multi-Agent AI · IBM Cloud Code Engine
+  Built for <strong>IBM Bob Hackathon — Problem Statement 12</strong><br/>
+  Bengaluru Two-Wheeler Rider Skin Health Advisor · IBM Granite · Groq · Multi-Agent AI
 </footer>
 
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
 <script>
-// ════════════════════════════════════════════════════════
-// State
-// ════════════════════════════════════════════════════════
-let lastResult  = null;
-let sessionId   = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
-let hourlyChart = null;
+// ════ State ════
+let lastResult   = null;
+let sessionId    = (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2));
+let hourlyChart  = null;
 let analyticsChart = null;
+let routesMeta   = {};
 
-// ════════════════════════════════════════════════════════
-// Tab Navigation
-// ════════════════════════════════════════════════════════
+// ════ Route metadata from API ════
+async function loadRoutesMeta() {
+  try {
+    const res = await fetch('/api/routes');
+    const data = await res.json();
+    (data.routes || []).forEach(r => { routesMeta[r.label] = r; });
+    updateRouteInfoBar();
+  } catch(e) {
+    // Fallback inline
+    routesMeta = {
+      "Electronic City – Indiranagar":{"distance_km":22.5,"typical_duration":1.25,"avg_speed_kmh":18,"peak_hours":["08:00-10:00","17:30-20:00"],"major_junctions":["Silk Board","BTM Layout"],"open_exposure_pct":85,"traffic_multiplier":1.4},
+      "Whitefield – Koramangala ORR":{"distance_km":28,"typical_duration":1.5,"avg_speed_kmh":19,"peak_hours":["08:00-10:30","18:00-20:30"],"major_junctions":["ITPL Signal","Marathahalli","Silk Board"],"open_exposure_pct":90,"traffic_multiplier":1.6},
+    };
+  }
+}
+loadRoutesMeta();
+
+function onRouteChange() {
+  const sel = document.getElementById('routeSelect').value;
+  document.getElementById('customRouteBox').classList.toggle('show', sel === '__custom__');
+  updateRouteInfoBar();
+  if (sel !== '__custom__') {
+    const info = routesMeta[sel];
+    if (info) {
+      document.getElementById('duration').value = info.typical_duration || 1.0;
+    }
+  }
+}
+
+function updateRouteInfoBar() {
+  const sel  = document.getElementById('routeSelect').value;
+  const bar  = document.getElementById('routeInfoBar');
+  const info = routesMeta[sel];
+  if (!info || sel === '__custom__') { bar.style.display='none'; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = `
+    <div class="route-pill"><span class="rp-label">Distance</span><strong>${info.distance_km} km</strong></div>
+    <div class="route-pill"><span class="rp-label">Avg speed</span><strong>${info.avg_speed_kmh} km/h</strong></div>
+    <div class="route-pill"><span class="rp-label">Open exposure</span><strong>${info.open_exposure_pct}%</strong></div>
+    <div class="route-pill"><span class="rp-label">Traffic ×</span><strong>${info.traffic_multiplier}x</strong></div>
+    <div class="route-pill"><span class="rp-label">Peak hrs</span><strong>${(info.peak_hours||[]).join(', ')}</strong></div>
+    ${(info.major_junctions||[]).length ? `<div class="route-pill"><span class="rp-label">Key junctions</span><strong>${info.major_junctions.slice(0,3).join(' → ')}</strong></div>` : ''}
+  `;
+}
+
+// ════ Tabs ════
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -378,15 +561,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
   });
 });
 
-// ════════════════════════════════════════════════════════
-// Protection Discount Live Calc
-// ════════════════════════════════════════════════════════
+// ════ Protection Discount ════
 function calcDiscount() {
   let d = 0;
   const spf = document.getElementById('spfRating').value;
-  if (document.getElementById('uses_sunscreen').checked) {
+  if (document.getElementById('uses_sunscreen').checked)
     d += spf === 'SPF50+' ? 0.25 : spf === 'SPF30' ? 0.15 : 0;
-  }
   if (document.getElementById('reapplies_sunscreen').checked)  d += 0.05;
   if (document.getElementById('wears_arm_sleeves').checked)    d += 0.15;
   if (document.getElementById('wears_full_jacket').checked)    d += 0.15;
@@ -396,44 +576,39 @@ function calcDiscount() {
   if (document.getElementById('uses_face_mask_gaiter').checked) d += 0.05;
   d = Math.min(d, 0.65);
   document.getElementById('discountVal').textContent = Math.round(d * 100) + '%';
-}
-
-function syncSpf() { calcDiscount(); }
-function syncVisor() { calcDiscount(); }
-
-document.querySelectorAll('.check-item input').forEach(cb => {
-  cb.addEventListener('change', () => {
-    cb.closest('.check-item').classList.toggle('checked', cb.checked);
-    calcDiscount();
+  document.querySelectorAll('.check-item').forEach(ci => {
+    const cb = ci.querySelector('input[type=checkbox]');
+    if (cb) ci.classList.toggle('checked', cb.checked);
   });
-});
-document.getElementById('spfRating').addEventListener('change', calcDiscount);
+}
+function syncSpf() { calcDiscount(); }
 
-// ════════════════════════════════════════════════════════
-// Advisory API Call
-// ════════════════════════════════════════════════════════
+// ════ Main Advisory Call ════
 async function runAdvisory() {
   const btn = document.getElementById('analyzeBtn');
   btn.disabled = true;
   showLoader();
 
-  const steps = [
-    '🔵 Agent 1: Fetching UV & Air Quality telemetry…',
-    '🟡 Agent 2: Calculating exposure score & travel verdict…',
-    '🟠 Agent 3: Scanning optimal departure windows…',
-    '🟣 Agent 4: Generating skincare protocol…',
-    '🔴 Agent 5: Auditing protection gear gaps…',
-    '🟢 Agent 6: Logging to analytics database…',
-  ];
+  // Animate loader steps
   let si = 0;
-  const stepEl = document.getElementById('agentStep');
   const stepTimer = setInterval(() => {
-    stepEl.textContent = steps[si++ % steps.length];
-  }, 1400);
+    document.querySelectorAll('.step-line').forEach((el, i) => {
+      if (i < si)       { el.className='step-line done'; }
+      else if (i === si){ el.className='step-line active'; }
+      else              { el.className='step-line pending'; }
+    });
+    si = Math.min(si + 1, 5);
+  }, 1500);
+
+  const sel  = document.getElementById('routeSelect').value;
+  const isCustom = sel === '__custom__';
+  const routeVal = isCustom ? (document.getElementById('customStart').value + ' – ' + document.getElementById('customEnd').value) : sel;
 
   try {
     const payload = {
-      route:                document.getElementById('route').value,
+      route:                isCustom ? 'custom' : sel,
+      custom_start:         isCustom ? document.getElementById('customStart').value : null,
+      custom_end:           isCustom ? document.getElementById('customEnd').value : null,
       duration_hours:       parseFloat(document.getElementById('duration').value),
       departure_time:       document.getElementById('departure').value || null,
       name:                 document.getElementById('riderName').value || 'Rider',
@@ -447,6 +622,8 @@ async function runAdvisory() {
       visor_type:           document.getElementById('visor_uv_tinted').checked ? 'uv_tinted' : 'clear',
       wears_gloves:         document.getElementById('wears_gloves').checked,
       uses_face_mask_gaiter:document.getElementById('uses_face_mask_gaiter').checked,
+      reminder_enabled:     document.getElementById('reminderEnabled').checked,
+      reminder_minutes_before: 15,
     };
 
     const res = await fetch('/api/advisory', {
@@ -454,140 +631,171 @@ async function runAdvisory() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(payload),
     });
-
-    if (!res.ok) throw new Error(`Server error ${res.status}`);
+    if (!res.ok) throw new Error('Server error ' + res.status);
     lastResult = await res.json();
     sessionId  = lastResult.session_id || sessionId;
-    renderResults(lastResult);
 
-    // Switch to results tab
-    document.querySelector('[data-tab="results"]').click();
-  } catch (err) {
-    alert('Error running advisory: ' + err.message + '\n\nMake sure the backend server is running on port 8000.');
-    // Show demo mode
-    renderDemoResults();
-    document.querySelector('[data-tab="results"]').click();
-  } finally {
+    clearInterval(stepTimer);
+    document.querySelectorAll('.step-line').forEach(el => el.className='step-line done');
+
+    setTimeout(() => {
+      hideLoader();
+      btn.disabled = false;
+      renderResults(lastResult);
+      document.querySelector('[data-tab="results"]').click();
+      // Show reminder modal if enabled
+      if (payload.reminder_enabled && lastResult.gear_reminders?.length) {
+        setTimeout(() => showReminderModal(lastResult), 600);
+      }
+    }, 400);
+
+  } catch(err) {
     clearInterval(stepTimer);
     hideLoader();
     btn.disabled = false;
+    // Demo mode
+    renderDemoResults();
+    document.querySelector('[data-tab="results"]').click();
   }
 }
 
-// ════════════════════════════════════════════════════════
-// Render Results
-// ════════════════════════════════════════════════════════
+// ════ Render Results ════
 const VERDICT_META = {
-  SAFE_TO_TRAVEL:      {icon:'✅', label:'SAFE TO TRAVEL',       color:'var(--safe)'},
-  TRAVEL_WITH_GEAR:    {icon:'⚠️', label:'TRAVEL WITH GEAR',     color:'var(--gear)'},
-  DELAY_RECOMMENDED:   {icon:'🕐', label:'DELAY RECOMMENDED',    color:'var(--delay)'},
-  AVOID_NON_ESSENTIAL: {icon:'🚫', label:'AVOID NON-ESSENTIAL',  color:'var(--avoid)'},
+  SAFE_TO_TRAVEL:      {icon:'✅', label:'SAFE TO TRAVEL',      color:'var(--safe)'},
+  TRAVEL_WITH_GEAR:    {icon:'⚠️', label:'TRAVEL WITH GEAR',    color:'var(--gear)'},
+  DELAY_RECOMMENDED:   {icon:'🕐', label:'DELAY RECOMMENDED',   color:'var(--delay)'},
+  AVOID_NON_ESSENTIAL: {icon:'🚫', label:'AVOID NON-ESSENTIAL', color:'var(--avoid)'},
 };
 
 function renderResults(r) {
-  const vm = VERDICT_META[r.travel_verdict] || VERDICT_META['SAFE_TO_TRAVEL'];
+  const vm = VERDICT_META[r.travel_verdict] || VERDICT_META.SAFE_TO_TRAVEL;
   const t  = r.telemetry;
-
+  const ri = r.route_info || {};
   let html = '';
 
   // HITL Banner
   if (r.hitl_triggered) {
-    html += `<div class="hitl-banner" style="display:flex;gap:10px;align-items:center">
-      🚨 <strong>High-Risk Alert Triggered:</strong> Score ${r.risk_score.toFixed(2)} exceeds threshold.
-      Human-in-the-loop notification sent.
-    </div>`;
+    html += `<div class="hitl-banner">🚨 <strong>High-Risk Alert:</strong> Score ${r.risk_score.toFixed(2)} exceeds safety threshold. HITL notification sent.</div>`;
   }
 
   // Verdict Banner
   html += `<div class="verdict-banner ${r.travel_verdict}">
     <div class="verdict-icon">${vm.icon}</div>
-    <div>
+    <div style="flex:1">
       <div class="verdict-title">${vm.label}</div>
-      <div class="verdict-score">Net Exposure Score: <strong>${r.risk_score.toFixed(2)}</strong>
+      <div class="verdict-score">
+        Net Exposure Score: <strong>${r.risk_score.toFixed(2)}</strong>
         <span class="source-badge">${t.source}</span>
       </div>
-      <div class="verdict-explanation">${r.verdict_explanation}</div>
+      <div class="verdict-explanation">${esc(r.verdict_explanation)}</div>
     </div>
   </div>`;
 
-  // Telemetry Row
-  html += `<div class="section-title">🌡️ Current Bengaluru Conditions</div>
-  <div class="telemetry-row">
-    <div class="tcard"><div class="tval" style="color:${uvColor(t.uv_index)}">${t.uv_index.toFixed(1)}</div><div class="tlabel">UV Index</div></div>
-    <div class="tcard"><div class="tval">${t.pm25.toFixed(0)}</div><div class="tlabel">PM2.5 μg/m³</div></div>
-    <div class="tcard"><div class="tval">${t.dust.toFixed(0)}</div><div class="tlabel">Dust μg/m³</div></div>
-    <div class="tcard"><div class="tval">${t.temperature_c.toFixed(1)}°</div><div class="tlabel">Temperature</div></div>
-    <div class="tcard"><div class="tval">${t.humidity_pct.toFixed(0)}%</div><div class="tlabel">Humidity</div></div>
-    <div class="tcard"><div class="tval">${t.precipitation_prob}%</div><div class="tlabel">Rain Prob.</div></div>
+  // Route Info Banner
+  if (ri.name || ri.distance_km) {
+    html += `<div class="route-banner">
+      <div class="route-banner-title">🗺️ ${ri.name || 'Route Details'}</div>
+      ${ri.distance_km ? `<div class="route-pill"><span class="rp-label">Distance</span><strong>${ri.distance_km} km</strong></div>` : ''}
+      ${ri.avg_speed_kmh ? `<div class="route-pill"><span class="rp-label">Avg Speed</span><strong>${ri.avg_speed_kmh} km/h</strong></div>` : ''}
+      ${ri.open_exposure_pct ? `<div class="route-pill"><span class="rp-label">Open Exposure</span><strong>${ri.open_exposure_pct}%</strong></div>` : ''}
+      ${ri.traffic_multiplier ? `<div class="route-pill"><span class="rp-label">Traffic ×</span><strong>${ri.traffic_multiplier}x</strong></div>` : ''}
+      ${(ri.major_junctions||[]).length ? `<div class="route-pill"><span class="rp-label">Junctions</span><strong>${ri.major_junctions.slice(0,3).join(' → ')}</strong></div>` : ''}
+    </div>`;
+  }
+
+  // Telemetry grid — extended
+  const aqiKey = (t.aqi_category||'Moderate').replace(/ /g,'_');
+  html += `<div class="section-title">🌡️ Live Bengaluru Conditions</div>
+  <div class="tele-grid">
+    <div class="tcard"><div class="tval" style="color:${uvColor(t.uv_index)}">${(t.uv_index||0).toFixed(1)}</div><div class="tlabel">UV Index</div><div class="tsub">Clear-sky: ${(t.uv_index_clear_sky||0).toFixed(1)}</div></div>
+    <div class="tcard"><div class="tval">${(t.pm25||0).toFixed(0)}</div><div class="tlabel">PM2.5 µg/m³<span class="aqi-pill aqi-${aqiKey}">${t.aqi_category||'Moderate'}</span></div><div class="tsub">PM10: ${(t.pm10||0).toFixed(0)}</div></div>
+    <div class="tcard"><div class="tval">${(t.temperature_c||0).toFixed(1)}°</div><div class="tlabel">Temperature</div><div class="tsub">Feels ${(t.apparent_temp_c||0).toFixed(1)}°C</div></div>
+    <div class="tcard"><div class="tval">${(t.humidity_pct||0).toFixed(0)}%</div><div class="tlabel">Humidity</div><div class="tsub">Dew ${(t.dew_point_c||0).toFixed(1)}°C</div></div>
+    <div class="tcard"><div class="tval">${(t.wind_speed_kmh||0).toFixed(0)}</div><div class="tlabel">Wind km/h</div><div class="tsub">${windDir(t.wind_direction_deg||0)}</div></div>
+    <div class="tcard"><div class="tval">${t.cloud_cover_pct||0}%</div><div class="tlabel">Cloud Cover</div><div class="tsub">${t.weather_description||'Clear'}</div></div>
+    <div class="tcard"><div class="tval">${(t.visibility_km||10).toFixed(1)}</div><div class="tlabel">Visibility km</div><div class="tsub">Press: ${(t.surface_pressure_hpa||916).toFixed(0)} hPa</div></div>
+    <div class="tcard"><div class="tval">${(t.ozone||0).toFixed(0)}</div><div class="tlabel">Ozone ppb</div><div class="tsub">NO₂: ${(t.nitrogen_dioxide||0).toFixed(0)}</div></div>
+    <div class="tcard"><div class="tval">${t.precipitation_prob||0}%</div><div class="tlabel">Rain Prob.</div><div class="tsub">${(t.precipitation_mm||0).toFixed(1)} mm</div></div>
   </div>`;
 
   // Best Windows
-  if (r.best_travel_windows && r.best_travel_windows.length) {
-    html += `<div class="section-title">⏰ Best Travel Windows Today</div>
-    <div class="windows-row">`;
+  if ((r.best_travel_windows||[]).length) {
+    html += `<div class="section-title">⏰ Best Travel Windows Today</div><div class="windows-row">`;
     r.best_travel_windows.forEach((w, i) => {
       html += `<div class="window-badge">
-        <div class="wreduct">-${w.reduction_pct || 0}%</div>
+        <div class="wreduct">-${w.reduction_pct||0}%</div>
         <div class="wtime">#${i+1} · ${w.label}</div>
-        <div class="wstats">UV ${w.uv} · PM2.5 ${w.pm25} · Score ${w.score}</div>
+        <div class="wstats">
+          UV: ${w.uv} | PM2.5: ${w.pm25}<br/>
+          Wind: ${w.wind_kmh||'—'} km/h | Cloud: ${w.cloud_pct||'—'}%<br/>
+          Score: <strong>${w.score}</strong> | Rain: ${w.rain_prob||0}%
+        </div>
+        ${w.is_peak_traffic ? '<div class="peak-tag">Peak Traffic Hour</div>' : ''}
       </div>`;
     });
     html += '</div>';
   }
 
-  // Hourly Chart
-  html += `<div class="chart-wrapper">
-    <h3>📉 24-Hour Hourly UV &amp; PM2.5 Risk Forecast</h3>
-    <canvas id="hourlyChart"></canvas>
-  </div>`;
-
-  // Agent Cards
-  html += `<div class="section-title">🤖 Multi-Agent Analysis</div>
-  <div class="agent-cards">`;
-
-  // Skincare card
-  if (r.skincare_advice) {
-    html += agentCard('🧴 Skin Care Advisory Agent', r.skincare_advice,
-      r.agents.find(a => a.agent.includes('Skin Care')));
-  }
-
-  // Gear card
-  if (r.gear_recommendations) {
-    html += agentCard('🛡️ Protective Measures Agent', r.gear_recommendations,
-      r.agents.find(a => a.agent.includes('Protective')));
-  }
-
-  // Protection gaps card
-  if (r.protection_gaps && r.protection_gaps.length) {
-    let gapHtml = `<ul class="gap-list">${r.protection_gaps.map(g =>
-      `<li><span>⚠</span>${g}</li>`).join('')}</ul>`;
-    html += `<div class="agent-card">
-      <div class="provider-tag">Gap Analysis</div>
-      <h4>🔍 Protection Gaps Identified (${r.protection_gaps.length})</h4>
-      <div class="agent-body">${gapHtml}</div>
+  // AI Advice from timing agent
+  const timingAgent = (r.agents||[]).find(a => a.agent && a.agent.includes('Timing'));
+  if (timingAgent?.raw_response) {
+    html += `<div class="agent-card" style="margin-bottom:16px">
+      <h4><span class="provider-tag">${timingAgent.llm_provider} · ${(timingAgent.llm_model||'').split('/').pop()}</span>⏰ Timing Recommendation</h4>
+      <div class="agent-body">${esc(timingAgent.raw_response)}</div>
     </div>`;
   }
 
-  // Cost Info
-  html += `</div>
-  <div class="cost-info">
-    🤖 Total AI tokens: <strong>${r.total_tokens.toLocaleString()}</strong> |
-    💰 Cost: <strong>$${r.total_cost_usd.toFixed(6)}</strong> |
+  // Hourly Chart
+  html += `<div class="chart-wrapper">
+    <h3>📉 24-Hour UV Index, PM2.5, Temperature &amp; Wind Forecast</h3>
+    <canvas id="hourlyChart"></canvas>
+  </div>`;
+
+  // Agent Output Cards
+  html += `<div class="section-title">🤖 Multi-Agent AI Analysis</div><div class="agent-cards">`;
+
+  const skincareA = (r.agents||[]).find(a => a.agent && a.agent.includes('Skin Care'));
+  if (skincareA || r.skincare_advice) {
+    html += agentCard('🧴 Skin Care Advisory Agent', r.skincare_advice, skincareA);
+  }
+
+  const protA = (r.agents||[]).find(a => a.agent && a.agent.includes('Protective'));
+  if (protA || r.gear_recommendations) {
+    html += agentCard('🛡️ Protective Measures Agent', r.gear_recommendations, protA);
+  }
+
+  if ((r.protection_gaps||[]).length) {
+    html += `<div class="agent-card">
+      <h4>🔍 Protection Gaps (${r.protection_gaps.length})</h4>
+      <ul class="gap-list">${r.protection_gaps.map(g=>`<li><span>⚠</span>${g}</li>`).join('')}</ul>
+    </div>`;
+  }
+
+  // Risk agent card
+  const riskA = (r.agents||[]).find(a => a.agent && a.agent.includes('Risk'));
+  if (riskA?.raw_response) {
+    html += agentCard('☢️ Risk & Verdict Agent', riskA.raw_response, riskA);
+  }
+
+  html += `</div>`;
+
+  // Cost info
+  html += `<div class="cost-info">
+    🤖 Total AI tokens: <strong>${(r.total_tokens||0).toLocaleString()}</strong> |
+    💰 Cost: <strong>$${(r.total_cost_usd||0).toFixed(6)}</strong> |
     ⏱ ${new Date(r.timestamp).toLocaleTimeString()}
+    ${r.total_tokens > 0 ? '' : ' | <span style="color:var(--delay)">LLM keys required for AI responses — configure .env</span>'}
   </div>`;
 
   document.getElementById('resultsArea').innerHTML = html;
-
-  // Render chart
   setTimeout(() => renderHourlyChart(t), 50);
 }
 
 function agentCard(title, text, agent) {
-  const provider = agent ? `${agent.llm_provider} / ${agent.llm_model.split('/').pop()}` : '';
+  const prov = agent ? `${agent.llm_provider} · ${(agent.llm_model||'').split('/').pop()}` : '';
   return `<div class="agent-card">
-    <div class="provider-tag">${provider}</div>
-    <h4>${title}</h4>
-    <div class="agent-body">${escHtml(text)}</div>
+    <h4><span class="provider-tag">${prov}</span>${title}</h4>
+    <div class="agent-body">${esc(text||'')}</div>
   </div>`;
 }
 
@@ -599,189 +807,199 @@ function uvColor(uv) {
   return 'var(--avoid)';
 }
 
+function windDir(deg) {
+  const dirs = ['N','NE','E','SE','S','SW','W','NW'];
+  return dirs[Math.round(deg / 45) % 8];
+}
+
+// Hourly Chart (4 datasets)
 function renderHourlyChart(t) {
   const ctx = document.getElementById('hourlyChart');
   if (!ctx) return;
   if (hourlyChart) { hourlyChart.destroy(); hourlyChart = null; }
-  const labels = Array.from({length:24}, (_,i) => `${i.toString().padStart(2,'0')}:00`);
+  const labels = Array.from({length:24}, (_,i)=>`${i.toString().padStart(2,'0')}:00`);
   hourlyChart = new Chart(ctx, {
-    type: 'line',
-    data: {
+    type:'line',
+    data:{
       labels,
-      datasets: [
-        {
-          label: 'UV Index',
-          data: t.hourly_uv,
-          borderColor: '#ff9100', backgroundColor: 'rgba(255,145,0,.1)',
-          tension: .4, fill: true, yAxisID: 'y',
-        },
-        {
-          label: 'PM2.5 μg/m³',
-          data: t.hourly_pm25,
-          borderColor: '#29b6f6', backgroundColor: 'rgba(41,182,246,.08)',
-          tension: .4, fill: true, yAxisID: 'y2',
-        },
-      ],
+      datasets:[
+        {label:'UV Index',      data:t.hourly_uv,    borderColor:'#ff9100',backgroundColor:'rgba(255,145,0,.08)', tension:.4,fill:true,  yAxisID:'y'},
+        {label:'PM2.5 µg/m³',  data:t.hourly_pm25,  borderColor:'#29b6f6',backgroundColor:'rgba(41,182,246,.06)', tension:.4,fill:true,  yAxisID:'y2'},
+        {label:'Temp °C',       data:t.hourly_temp||[],  borderColor:'#ff4081',backgroundColor:'transparent',         tension:.4,fill:false, yAxisID:'y3'},
+        {label:'Wind km/h',     data:t.hourly_wind||[],  borderColor:'#b2ff59',backgroundColor:'transparent',         tension:.4,fill:false, yAxisID:'y3',borderDash:[4,3]},
+      ]
     },
-    options: {
-      responsive: true, interaction: {mode:'index', intersect:false},
-      plugins: {legend:{labels:{color:'#8b90bb'}}},
-      scales: {
-        x: {ticks:{color:'#8b90bb'}, grid:{color:'rgba(255,255,255,.04)'}},
-        y:  {position:'left',  title:{display:true,text:'UV Index',color:'#ff9100'},  ticks:{color:'#8b90bb'}, grid:{color:'rgba(255,255,255,.04)'}},
-        y2: {position:'right', title:{display:true,text:'PM2.5',  color:'#29b6f6'},  ticks:{color:'#8b90bb'}, grid:{display:false}},
-      },
-    },
+    options:{
+      responsive:true, interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#8b90bb',boxWidth:14}}},
+      scales:{
+        x: {ticks:{color:'#8b90bb',maxTicksLimit:12},grid:{color:'rgba(255,255,255,.04)'}},
+        y:  {position:'left',  title:{display:true,text:'UV',    color:'#ff9100'},ticks:{color:'#8b90bb'},grid:{color:'rgba(255,255,255,.04)'}},
+        y2: {position:'right', title:{display:true,text:'PM2.5', color:'#29b6f6'},ticks:{color:'#8b90bb'},grid:{display:false}},
+        y3: {position:'right', title:{display:true,text:'°C / km/h',color:'#ff4081'},ticks:{color:'#8b90bb'},grid:{display:false},offset:true},
+      }
+    }
   });
 }
 
-// ════════════════════════════════════════════════════════
-// Demo results (when backend is unavailable)
-// ════════════════════════════════════════════════════════
+// ════ Pre-Ride Reminder Modal ════
+function showReminderModal(r) {
+  const reminders = r.gear_reminders || [];
+  const msg       = r.reminder_message || 'Get your safety gear ready before you ride!';
+  document.getElementById('reminderMsg').innerHTML = esc(msg).replace(/\n/g,'<br>');
+  const list = document.getElementById('gearChecklist');
+  list.innerHTML = reminders.map(rem => `
+    <li class="gear-item">
+      <div class="gear-emoji">${rem.emoji}</div>
+      <div class="gear-info">
+        <div class="gear-name">${rem.gear_item}</div>
+        <div class="gear-reason">${rem.reason}</div>
+      </div>
+      <span class="priority-badge priority-${rem.priority}">${rem.priority.toUpperCase()}</span>
+    </li>
+  `).join('');
+  document.getElementById('reminderModal').classList.add('open');
+}
+
+function closeReminder() {
+  document.getElementById('reminderModal').classList.remove('open');
+}
+
+// Click outside to close
+document.getElementById('reminderModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeReminder();
+});
+
+// ════ Demo Results ════
 function renderDemoResults() {
   const demo = {
-    session_id: sessionId,
-    timestamp: new Date().toISOString(),
-    travel_verdict: 'TRAVEL_WITH_GEAR',
-    risk_score: 7.84,
-    verdict_explanation: 'UV Index is moderate-high at 8.5 and PM2.5 of 65 μg/m³ exceeds safe levels. With your current protection level, riding is feasible but gear is essential.',
-    best_travel_windows: [
-      {label:'06:30–07:30', uv:1.8, pm25:38, score:2.14, reduction_pct:72},
-      {label:'18:30–19:30', uv:0.9, pm25:85, score:3.22, reduction_pct:59},
-      {label:'07:00–08:00', uv:2.1, pm25:42, score:2.56, reduction_pct:67},
+    session_id: sessionId, timestamp: new Date().toISOString(),
+    travel_verdict: 'TRAVEL_WITH_GEAR', risk_score: 7.84,
+    verdict_explanation: 'UV Index is 8.5 and PM2.5 of 65 µg/m³ (AQI: Unhealthy for Sensitive). With current protection level, riding is feasible but gear is essential. Wind at 14 km/h will increase particle deposition on exposed skin.',
+    route_info: { name:'Electronic City – Indiranagar', distance_km:22.5, avg_speed_kmh:18, open_exposure_pct:85, traffic_multiplier:1.4, major_junctions:['Silk Board','BTM Layout','Koramangala'] },
+    best_travel_windows:[
+      {label:'06:30-07:30',uv:1.8,pm25:38,score:2.14,reduction_pct:72,wind_kmh:9,cloud_pct:15,is_peak_traffic:false,rain_prob:5},
+      {label:'18:30-19:30',uv:0.9,pm25:85,score:3.22,reduction_pct:59,wind_kmh:16,cloud_pct:30,is_peak_traffic:true,rain_prob:10},
+      {label:'07:00-08:00',uv:2.1,pm25:42,score:2.56,reduction_pct:67,wind_kmh:11,cloud_pct:18,is_peak_traffic:false,rain_prob:5},
     ],
-    skincare_advice: 'PRE-RIDE:\n• Apply broad-spectrum SPF50+ 20 min before departure\n• Use niacinamide serum to strengthen skin barrier\n• Wear moisture-wicking base layer under helmet\n\nPOST-RIDE:\n• Double-cleanse with micellar water + gentle foaming wash\n• Apply hyaluronic acid serum while face is damp\n• Use Vitamin C serum at night to combat oxidative stress from PM2.5',
-    gear_recommendations: 'Your current gear has a protection rating of 4/10.\n• Upgrade to UV-tinted visor (blocks 99% UV) — priority action\n• Add UPF 50+ arm sleeves — available on Flipkart for ₹299\n• Use N95 mask instead of cotton for PM2.5 filtration\n• Apply sunscreen 20 min before departure',
-    protection_gaps: ['No SPF sunscreen', 'Clear visor (no UV protection)', 'No UPF arm sleeves or full riding jacket'],
-    agents: [
-      {agent:'Sun Exposure Risk & Travel Verdict Agent', llm_provider:'granite', llm_model:'ibm/granite-3-3-8b-instruct', tokens_used:420, cost_usd:0.000034},
-      {agent:'Travel Timing Advisory Agent', llm_provider:'granite', llm_model:'ibm/granite-3-3-8b-instruct', tokens_used:310, cost_usd:0.000025},
-      {agent:'Skin Care Advisory Agent', llm_provider:'granite', llm_model:'ibm/granite-3-3-8b-instruct', tokens_used:380, cost_usd:0.000030},
-      {agent:'Protective Measures Recommendation Agent', llm_provider:'granite', llm_model:'ibm/granite-3-3-8b-instruct', tokens_used:290, cost_usd:0.000023},
+    skincare_advice:'PRE-RIDE PREP:\n• Apply broad-spectrum SPF50+ 20 min before departure\n• Use niacinamide serum to strengthen barrier\n• Wear moisture-wicking base layer under helmet\n• Rinse face with cold water to minimize pore size\n\nPOST-RIDE RECOVERY:\n• Double-cleanse with micellar water + foaming wash\n• Apply hyaluronic acid serum while face is damp\n• Use Vitamin C serum at night against oxidative stress\n• Gentle ice-cold towel for 2 min to reduce inflammation\n\nSPECIAL WARNING: Today\'s combination of UV 8.5 and PM2.5 65 will accelerate skin aging — do not skip SPF.',
+    gear_recommendations:'- No SPF sunscreen: Use Minimalist SPF 50+ (Rs. 299) — apply 20 min before departure.\n- Clear visor: Replace with UV-tinted visor (Rs. 599 at Amazon) — blocks 99% UV vs 5% clear.\n- No arm sleeves: Get SunGaiter UPF 50+ sleeves (Rs. 199) — your forearms take 90% of direct UV.\n\nPROTECTION RATING: 4/10\nHIGHEST PRIORITY TODAY: Apply SPF50+ sunscreen before you start the engine.',
+    protection_gaps:['No SPF sunscreen','Clear visor (0% UV protection)','No UPF arm sleeves or full jacket'],
+    gear_reminders:[
+      {gear_item:'Helmet',priority:'critical',reason:'Legal requirement. Protects from UV and pollution ingress.',emoji:'🪖'},
+      {gear_item:'SPF50+ Sunscreen',priority:'critical',reason:'UV Index is 8.5. Apply 20 min before ride.',emoji:'🧴'},
+      {gear_item:'UV-Tinted Visor',priority:'critical',reason:'UV 8.5 with 25% cloud cover. Blocks 99% UV vs clear visor.',emoji:'😎'},
+      {gear_item:'Face Mask',priority:'critical',reason:'PM2.5 is 65 µg/m³ — Unhealthy for Sensitive. Filter PM2.5.',emoji:'😷'},
+      {gear_item:'UPF Arm Sleeves',priority:'high',reason:'Covers forearms — highest UV exposure area on a bike.',emoji:'👕'},
+      {gear_item:'Riding Gloves',priority:'high',reason:'Protects hands from UV and PM2.5 particle deposition.',emoji:'🧤'},
+      {gear_item:'Hydration',priority:'recommended',reason:'Riding dehydrates. UV + heat load is highest midday.',emoji:'💧'},
     ],
-    total_tokens: 1400,
-    total_cost_usd: 0.000112,
-    hitl_triggered: false,
-    telemetry: {
-      uv_index: 8.5, temperature_c: 29.0, humidity_pct: 68.0,
-      precipitation_prob: 20, pm25: 65.0, dust: 12.0,
-      hourly_uv:    [0,0,0,0,0,0,0.5,1.8,3.9,6.2,8.5,10.1,11.3,11.8,10.9,9.2,7.1,4.6,2.3,0.9,0.2,0,0,0],
-      hourly_pm25:  [38,35,32,30,28,29,35,48,72,88,92,85,78,72,68,75,88,110,98,85,68,55,45,40],
+    reminder_message:"Hey, before you hit the road — make sure you've applied your SPF50+ sunscreen and switched to a UV-tinted visor! With UV at 8.5 and PM2.5 at 65 today, those two steps alone cut your skin risk by over 40%.",
+    agents:[
+      {agent:'Sun Exposure Risk & Travel Verdict Agent',raw_response:'UV Index is 8.5 and PM2.5 of 65 µg/m³ (AQI: Unhealthy for Sensitive). With current protection level, riding is feasible but gear is essential. Wind at 14 km/h will increase particle deposition on exposed skin.',llm_provider:'groq',llm_model:'llama-3.3-70b-versatile',tokens_used:420,cost_usd:0.000025},
+      {agent:'Travel Timing Advisory Agent',raw_response:'Best departure is 06:30-07:30 — UV is only 1.8 and PM2.5 is 38 µg/m³, giving a 72% reduction in exposure vs riding now. If evening is preferred, 18:30 avoids peak UV but expect heavier traffic at Silk Board.',llm_provider:'groq',llm_model:'llama-3.3-70b-versatile',tokens_used:310,cost_usd:0.000019},
+      {agent:'Skin Care Advisory Agent',raw_response:'',llm_provider:'groq',llm_model:'llama-3.3-70b-versatile',tokens_used:380,cost_usd:0.000023},
+      {agent:'Protective Measures Recommendation Agent',raw_response:'',llm_provider:'groq',llm_model:'llama-3.3-70b-versatile',tokens_used:290,cost_usd:0.000017},
+    ],
+    total_tokens: 1400, total_cost_usd: 0.000084, hitl_triggered: false,
+    telemetry:{
+      uv_index:8.5, uv_index_clear_sky:9.4, temperature_c:29.0, apparent_temp_c:33.2,
+      humidity_pct:68, dew_point_c:22.3, precipitation_prob:20, precipitation_mm:0,
+      wind_speed_kmh:14, wind_direction_deg:225, cloud_cover_pct:25, visibility_km:7.5,
+      surface_pressure_hpa:916.0, weather_code:2, weather_description:'Partly cloudy',
+      pm25:65, pm10:104, dust:12, ozone:42, nitrogen_dioxide:28, aqi_category:'Unhealthy for Sensitive',
+      hourly_uv:   [0,0,0,0,0,0,0.5,1.8,3.9,6.2,8.5,10.1,11.3,11.8,10.9,9.2,7.1,4.6,2.3,0.9,0.2,0,0,0],
+      hourly_pm25: [38,35,32,30,28,29,35,48,72,88,92,85,78,72,68,75,88,110,98,85,68,55,45,40],
+      hourly_temp: [22,22,21,21,21,22,23,25,27,29,31,33,34,34,33,32,30,28,27,26,25,24,23,23],
+      hourly_wind: [8,7,6,6,7,8,10,12,14,15,16,15,14,14,15,16,17,16,14,12,10,9,8,8],
+      hourly_cloud:[10,10,5,5,5,10,15,20,25,30,35,40,45,50,45,40,35,30,25,20,15,10,10,10],
       hourly_precip:[5,5,5,5,5,5,5,5,10,15,20,20,25,25,20,15,15,20,15,10,10,5,5,5],
-      source: 'demo',
-    },
+      source:'demo',
+    }
   };
   lastResult = demo;
   renderResults(demo);
+  if (document.getElementById('reminderEnabled').checked) {
+    setTimeout(() => showReminderModal(demo), 600);
+  }
 }
 
-// ════════════════════════════════════════════════════════
-// Analytics Dashboard
-// ════════════════════════════════════════════════════════
+// ════ Analytics ════
 async function loadAnalytics() {
   try {
     const res  = await fetch('/api/analytics');
     const data = await res.json();
-
-    if (data.error) {
-      // Demo analytics
-      renderDemoAnalytics();
-      return;
-    }
-
-    const daily   = data.daily   || [];
-    const summary = data.summary || {};
-
-    document.getElementById('an-trips').textContent  = summary.total_logs  || 0;
-    document.getElementById('an-tokens').textContent = (summary.total_tokens || 0).toLocaleString();
-    document.getElementById('an-cost').textContent   = '$' + parseFloat(summary.total_cost || 0).toFixed(4);
-
-    let safe=0, gear=0, delay=0, avoid=0;
-    daily.forEach(d => {
-      safe  += d.safe  || 0;
-      gear  += d.gear  || 0;
-      delay += d.delay || 0;
-      avoid += d.avoid || 0;
-    });
+    if (data.error) { renderDemoAnalytics(); return; }
+    const daily = data.daily || [], summary = data.summary || {};
+    document.getElementById('an-trips').textContent  = summary.total_logs || 0;
+    document.getElementById('an-tokens').textContent = (summary.total_tokens||0).toLocaleString();
+    document.getElementById('an-cost').textContent   = '$'+(parseFloat(summary.total_cost||0).toFixed(4));
+    let safe=0,gear=0,delay=0,avoid=0;
+    daily.forEach(d=>{ safe+=d.safe||0; gear+=d.gear||0; delay+=d.delay||0; avoid+=d.avoid||0; });
     document.getElementById('an-safe').textContent  = safe;
     document.getElementById('an-gear').textContent  = gear;
     document.getElementById('an-delay').textContent = delay;
     document.getElementById('an-avoid').textContent = avoid;
-
     renderAnalyticsChart(daily);
-  } catch (e) {
-    renderDemoAnalytics();
-  }
+  } catch(e) { renderDemoAnalytics(); }
 }
 
 function renderDemoAnalytics() {
-  const demoStats = {trips:48, safe:12, gear:21, delay:10, avoid:5, tokens:68200, cost:0.0054};
-  document.getElementById('an-trips').textContent  = demoStats.trips;
-  document.getElementById('an-safe').textContent   = demoStats.safe;
-  document.getElementById('an-gear').textContent   = demoStats.gear;
-  document.getElementById('an-delay').textContent  = demoStats.delay;
-  document.getElementById('an-avoid').textContent  = demoStats.avoid;
-  document.getElementById('an-tokens').textContent = demoStats.tokens.toLocaleString();
-  document.getElementById('an-cost').textContent   = '$' + demoStats.cost.toFixed(4);
-
-  const daily = [
-    {date:'2026-11-13', avg_score:5.2}, {date:'2026-11-14', avg_score:7.8},
-    {date:'2026-11-15', avg_score:9.1}, {date:'2026-11-16', avg_score:6.4},
-    {date:'2026-11-17', avg_score:8.3}, {date:'2026-11-18', avg_score:11.2},
-    {date:'2026-11-19', avg_score:7.4},
-  ];
-  renderAnalyticsChart(daily);
+  document.getElementById('an-trips').textContent  = 48;
+  document.getElementById('an-safe').textContent   = 12;
+  document.getElementById('an-gear').textContent   = 21;
+  document.getElementById('an-delay').textContent  = 10;
+  document.getElementById('an-avoid').textContent  = 5;
+  document.getElementById('an-tokens').textContent = '68,200';
+  document.getElementById('an-cost').textContent   = '$0.0054';
+  renderAnalyticsChart([
+    {date:'2026-11-13',avg_score:5.2},{date:'2026-11-14',avg_score:7.8},
+    {date:'2026-11-15',avg_score:9.1},{date:'2026-11-16',avg_score:6.4},
+    {date:'2026-11-17',avg_score:8.3},{date:'2026-11-18',avg_score:11.2},
+    {date:'2026-11-19',avg_score:7.4},
+  ]);
 }
 
 function renderAnalyticsChart(daily) {
   const ctx = document.getElementById('analyticsChart');
   if (!ctx) return;
   if (analyticsChart) { analyticsChart.destroy(); analyticsChart = null; }
-  const labels = daily.map(d => d.date);
-  const scores = daily.map(d => parseFloat(d.avg_score || 0).toFixed(2));
+  const labels = daily.map(d=>d.date);
+  const scores = daily.map(d=>parseFloat(d.avg_score||0).toFixed(2));
   analyticsChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
+    type:'bar',
+    data:{
       labels,
-      datasets: [{
-        label: 'Avg Net Exposure Score',
-        data: scores,
-        backgroundColor: scores.map(s =>
-          s < 3 ? 'rgba(0,230,118,.5)' : s < 7 ? 'rgba(255,214,0,.5)' : s < 12 ? 'rgba(255,145,0,.5)' : 'rgba(255,23,68,.5)'
-        ),
-        borderColor: scores.map(s =>
-          s < 3 ? '#00e676' : s < 7 ? '#ffd600' : s < 12 ? '#ff9100' : '#ff1744'
-        ),
-        borderWidth: 2, borderRadius: 6,
-      }],
+      datasets:[{
+        label:'Avg Net Exposure Score', data:scores,
+        backgroundColor: scores.map(s=>s<3?'rgba(0,230,118,.5)':s<7?'rgba(255,214,0,.5)':s<12?'rgba(255,145,0,.5)':'rgba(255,23,68,.5)'),
+        borderColor:     scores.map(s=>s<3?'#00e676':s<7?'#ffd600':s<12?'#ff9100':'#ff1744'),
+        borderWidth:2, borderRadius:6,
+      }]
     },
-    options: {
-      responsive: true,
-      plugins: {legend:{labels:{color:'#8b90bb'}}},
-      scales: {
-        x: {ticks:{color:'#8b90bb'}, grid:{color:'rgba(255,255,255,.04)'}},
-        y: {ticks:{color:'#8b90bb'}, grid:{color:'rgba(255,255,255,.04)'},
-            title:{display:true, text:'Avg Exposure Score', color:'#8b90bb'}},
-      },
-    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:'#8b90bb'}}},
+      scales:{
+        x:{ticks:{color:'#8b90bb'},grid:{color:'rgba(255,255,255,.04)'}},
+        y:{ticks:{color:'#8b90bb'},grid:{color:'rgba(255,255,255,.04)'},title:{display:true,text:'Avg Exposure Score',color:'#8b90bb'}},
+      }
+    }
   });
 }
 
-// ════════════════════════════════════════════════════════
-// AI Agent Chat Console
-// ════════════════════════════════════════════════════════
+// ════ Chat Console ════
 async function sendChat() {
-  const input = document.getElementById('chatInput');
-  const msg   = input.value.trim();
+  const input   = document.getElementById('chatInput');
+  const msg     = input.value.trim();
   if (!msg) return;
-
   const sendBtn = document.getElementById('sendBtn');
   sendBtn.disabled = true;
   appendMsg('user', msg);
   input.value = '';
 
   const ctx = lastResult ? {
-    route:            document.getElementById('route').value,
+    route:            document.getElementById('routeSelect').value,
     duration_hours:   parseFloat(document.getElementById('duration').value),
     skin_sensitivity: document.getElementById('skinSensitivity').value,
     skin_type:        document.getElementById('skinType').value,
@@ -789,61 +1007,57 @@ async function sendChat() {
     pm25:             lastResult.telemetry?.pm25        || 0,
     travel_verdict:   lastResult.travel_verdict         || '',
     risk_score:       lastResult.risk_score             || 0,
+    aqi_category:     lastResult.telemetry?.aqi_category || '',
+    weather:          lastResult.telemetry?.weather_description || '',
   } : {};
-
-  const payload = {
-    agent_name:  document.getElementById('agentSelector').value,
-    message:     msg,
-    session_id:  sessionId,
-    ...ctx,
-  };
 
   try {
     const res  = await fetch('/api/agent-chat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(payload),
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        agent_name:  document.getElementById('agentSelector').value,
+        message:     msg,
+        session_id:  sessionId,
+        ...ctx,
+      }),
     });
     const data = await res.json();
-    appendMsg('bot', data.response || 'No response received.',
-      `${data.provider} · ${data.tokens} tokens · $${(data.cost_usd||0).toFixed(6)}`);
-  } catch (e) {
+    appendMsg('bot', data.response || 'No response.',
+      `${data.provider||''} · ${data.tokens||0} tokens · $${(data.cost_usd||0).toFixed(6)}`);
+  } catch(e) {
     appendMsg('bot',
-      "⚠️ Backend unavailable. Demo response: Based on the current UV index and PM2.5 levels in Bengaluru, I recommend delaying your ride until after 18:00 when UV drops below 3 and PM2.5 improves. Apply SPF50+ sunscreen 20 minutes before departure.",
-      "demo fallback"
+      "Backend unavailable. Demo: Based on current UV 8.5 and PM2.5 65 in Bengaluru, riding at 06:30-07:30 reduces your exposure by 72%. Don't forget SPF50+ and a UV-tinted visor before departing.",
+      "demo"
     );
-  } finally {
-    sendBtn.disabled = false;
-    input.focus();
   }
+  sendBtn.disabled = false;
+  document.getElementById('chatInput').focus();
 }
 
 function appendMsg(role, text, meta) {
-  const container = document.getElementById('chatMessages');
+  const c   = document.getElementById('chatMessages');
   const div = document.createElement('div');
   div.className = `msg ${role}`;
-  div.innerHTML = escHtml(text) + (meta ? `<div class="msg-meta">${meta}</div>` : '');
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
+  div.innerHTML = esc(text).replace(/\n/g,'<br>') + (meta ? `<div class="msg-meta">${meta}</div>` : '');
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
 }
 
-// ════════════════════════════════════════════════════════
-// Utilities
-// ════════════════════════════════════════════════════════
-function showLoader() {
-  document.getElementById('loaderOverlay').style.display = 'flex';
-}
-function hideLoader() {
-  document.getElementById('loaderOverlay').style.display = 'none';
-}
-function escHtml(str) {
-  return String(str)
+// ════ Loader ════
+function showLoader() { document.getElementById('loaderOverlay').classList.add('show'); }
+function hideLoader() { document.getElementById('loaderOverlay').classList.remove('show'); }
+
+// ════ Utils ════
+function esc(str) {
+  return String(str||'')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\n/g,'<br>');
+    .replace(/\n/g,'\n');
 }
 
 // Init
 calcDiscount();
+onRouteChange();
 </script>
 </body>
 </html>

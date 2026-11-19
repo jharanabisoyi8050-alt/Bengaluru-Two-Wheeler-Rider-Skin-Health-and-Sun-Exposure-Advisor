@@ -77,21 +77,25 @@ analytics_agent  = AnalyticsDashboardAgent()
 
 class AdvisoryRequest(BaseModel):
     route:          str   = "Electronic City – Indiranagar"
+    custom_start:   Optional[str] = None   # custom origin
+    custom_end:     Optional[str] = None   # custom destination
     duration_hours: float = 1.0
     departure_time: Optional[str] = None
     rider_id:       Optional[int] = None
     # Rider profile fields (flattened for easy frontend use)
-    name:                   str   = "Rider"
-    skin_type:              str   = "combination"
-    skin_sensitivity:       str   = "moderate"
-    uses_sunscreen:         bool  = False
-    spf_rating:             str   = "none"
-    reapplies_sunscreen:    bool  = False
-    wears_arm_sleeves:      bool  = False
-    wears_full_jacket:      bool  = False
-    visor_type:             str   = "clear"
-    wears_gloves:           bool  = False
-    uses_face_mask_gaiter:  bool  = False
+    name:                    str   = "Rider"
+    skin_type:               str   = "combination"
+    skin_sensitivity:        str   = "moderate"
+    uses_sunscreen:          bool  = False
+    spf_rating:              str   = "none"
+    reapplies_sunscreen:     bool  = False
+    wears_arm_sleeves:       bool  = False
+    wears_full_jacket:       bool  = False
+    visor_type:              str   = "clear"
+    wears_gloves:            bool  = False
+    uses_face_mask_gaiter:   bool  = False
+    reminder_enabled:        bool  = True
+    reminder_minutes_before: int   = 15
 
 
 class AgentChatRequest(BaseModel):
@@ -174,10 +178,14 @@ async def get_advisory(req: AdvisoryRequest):
             visor_type=req.visor_type,
             wears_gloves=req.wears_gloves,
             uses_face_mask_gaiter=req.uses_face_mask_gaiter,
+            reminder_enabled=req.reminder_enabled,
+            reminder_minutes_before=req.reminder_minutes_before,
         )
         trip = TripRequest(
             rider=rider,
             route=req.route,
+            custom_start=req.custom_start,
+            custom_end=req.custom_end,
             duration_hours=req.duration_hours,
             departure_time=req.departure_time,
             rider_id=req.rider_id,
@@ -251,19 +259,28 @@ async def get_analytics():
 
 @app.get("/api/routes")
 async def list_routes():
-    """Known Bengaluru commute corridors."""
-    return {
-        "routes": [
-            {"id": "ec_indiranagar",    "label": "Electronic City – Indiranagar",     "avg_duration_h": 1.25},
-            {"id": "whitefield_kor",    "label": "Whitefield – Koramangala ORR",      "avg_duration_h": 1.50},
-            {"id": "hebbal_mg",         "label": "Hebbal – MG Road",                   "avg_duration_h": 1.00},
-            {"id": "btm_marathahalli",  "label": "BTM Layout – Marathahalli",          "avg_duration_h": 1.75},
-            {"id": "jpnagar_bellandur", "label": "JP Nagar – Bellandur",               "avg_duration_h": 0.75},
-            {"id": "kr_puram_silk",     "label": "KR Puram – Silk Board",             "avg_duration_h": 1.00},
-            {"id": "yeshwantpur_hsr",   "label": "Yeshwanthpur – HSR Layout",         "avg_duration_h": 1.50},
-            {"id": "banaswadi_itpl",    "label": "Banaswadi – ITPL Whitefield",       "avg_duration_h": 1.25},
-        ]
-    }
+    """Known Bengaluru commute corridors with full metadata."""
+    from agents_engine import BENGALURU_ROUTES
+    routes = []
+    for name, info in BENGALURU_ROUTES.items():
+        routes.append({
+            "label":             name,
+            "distance_km":       info["distance_km"],
+            "typical_duration":  info["typical_duration_h"],
+            "avg_speed_kmh":     info["avg_speed_kmh"],
+            "peak_hours":        info["peak_hours"],
+            "major_junctions":   info["major_junctions"],
+            "open_exposure_pct": info["open_exposure_pct"],
+            "traffic_multiplier":info["traffic_multiplier"],
+        })
+    return {"routes": routes}
+
+
+@app.get("/api/routes/detail")
+async def get_route_detail(name: str):
+    """Full detail for a named route (custom or preset)."""
+    from agents_engine import get_route_info
+    return {"route": name, **get_route_info(name)}
 
 
 # ─────────────────────────────────────────────────────────────
