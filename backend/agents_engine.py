@@ -48,7 +48,7 @@ log = structlog.get_logger()
 IBM_CLOUD_API_KEY   = os.getenv("IBM_CLOUD_API_KEY", "")
 WATSONX_URL         = os.getenv("WATSONX_URL", "https://us-south.ml.cloud.ibm.com")
 WATSONX_PROJECT_ID  = os.getenv("WATSONX_PROJECT_ID", "")
-WATSONX_MODEL_ID    = os.getenv("WATSONX_MODEL_ID", "ibm/granite-3-3-8b-instruct")
+WATSONX_MODEL_ID    = os.getenv("WATSONX_MODEL_ID", "ibm/granite-4-h-small")
 
 GROQ_API_KEY        = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL_ID       = os.getenv("GROQ_MODEL_ID", "openai/gpt-oss-20b")
@@ -442,29 +442,27 @@ class LLMGateway:
             return None
 
     def _call_granite(self, prompt: str, max_tokens: int = 600) -> Tuple[str, int, int]:
+        """Uses watsonx.ai chat API — required for granite-4-h-small and all instruct/chat models."""
         token = self._get_iam_token()
         if not token or not WATSONX_PROJECT_ID:
             raise RuntimeError("watsonx credentials not configured")
-        url  = f"{WATSONX_URL}/ml/v1/text/generation?version=2024-05-31"
+        url  = f"{WATSONX_URL}/ml/v1/text/chat?version=2024-05-31"
         body = {
             "model_id":   WATSONX_MODEL_ID,
             "project_id": WATSONX_PROJECT_ID,
-            "input":      prompt,
-            "parameters": {
-                "decoding_method":    "greedy",
-                "max_new_tokens":     max_tokens,
-                "temperature":        0.7,
-                "repetition_penalty": 1.1,
-            },
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens":  max_tokens,
+            "temperature": 0.7,
         }
         resp = httpx.post(url, json=body,
                           headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
                           timeout=35)
         resp.raise_for_status()
-        result   = resp.json()["results"][0]
-        text     = result.get("generated_text", "").strip()
-        p_tokens = result.get("input_token_count",    len(prompt.split()) * 2)
-        c_tokens = result.get("generated_token_count", len(text.split())  * 2)
+        rj       = resp.json()
+        text     = rj["choices"][0]["message"]["content"].strip()
+        usage    = rj.get("usage", {})
+        p_tokens = usage.get("prompt_tokens",     len(prompt.split()) * 2)
+        c_tokens = usage.get("completion_tokens", len(text.split())   * 2)
         return text, p_tokens, c_tokens
 
     def _call_groq(self, prompt: str, max_tokens: int = 600) -> Tuple[str, int, int]:
